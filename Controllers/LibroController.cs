@@ -1,13 +1,16 @@
 ﻿using ApiLibros2.DTOs;
 using ApiLibros2.Entidades;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiLibros2.Controllers
 {
     [ApiController]
-    [Route("/libros")]
+    [Route("libros")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin" )]
     public class LibrosController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
@@ -23,6 +26,7 @@ namespace ApiLibros2.Controllers
 
 
         [HttpGet("listado")]
+        [AllowAnonymous] 
         public async Task<ActionResult<List<GetLibroDTO>>> Get()
         {
             var libros = await dbContext.Libros.ToListAsync();

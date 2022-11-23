@@ -1,6 +1,8 @@
 ﻿using ApiLibros2.DTOs;
 using ApiLibros2.Entidades;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ namespace ApiLibros2.Controllers
 {
     [ApiController]
     [Route("autor")]
+
     public class AutorController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
@@ -28,6 +31,7 @@ namespace ApiLibros2.Controllers
             return await dbContext.Autor.ToListAsync();
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
         [HttpGet("{id:int}", Name = "obtenerAutor")]
          
         public async Task<ActionResult<AutorDTOConLibro>> GetById(int id)
